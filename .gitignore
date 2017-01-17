@@ -6,4 +6,4 @@
 *.ear
 
 /photomosaic.iml
-/.idea/
+/.idea/*
