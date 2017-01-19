@@ -10,8 +10,7 @@ public class MistakeAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		
+		response.sendRedirect("mistake.jsp");
 	}
 
 }

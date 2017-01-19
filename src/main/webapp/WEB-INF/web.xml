@@ -17,8 +17,18 @@
   	<description></description>
   	<servlet-class>controllers.PhotomosaicController</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>MistakePage</servlet-name>
+  	<jsp-file>/WEB-INF/pages/mistake.jsp</jsp-file>
+  </servlet>
+  
+  
   <servlet-mapping>
   	<servlet-name>PhotomosaicController</servlet-name>
   	<url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>MistakePage</servlet-name>
+  	<url-pattern>/mistake.jsp</url-pattern>
   </servlet-mapping>
 </web-app>

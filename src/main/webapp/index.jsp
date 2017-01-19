@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<form action="create_mosaic.do" method="post" enctype="multipart/form-data">
+	<form action="create_mosaic_mis.do" method="post" enctype="multipart/form-data">
 	
 	<input type="file" name="img_to_process" title="фото">
 	
