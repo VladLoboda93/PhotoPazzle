@@ -16,21 +16,7 @@ public class PhotomosaicController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	
-	/*protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter writer = response.getWriter();
-		writer.write("done");
-	}
-
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 
-		Part filePart = request.getPart("img_to_process");
-		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-		filePart.write("D:\\"+fileName);
-		 
-		response.sendRedirect("create_mosaic.do");		 	 
-		 
-	}*/
 
 
 	@Override
