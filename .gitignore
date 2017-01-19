@@ -7,3 +7,6 @@
 
 /photomosaic.iml
 /.idea/*
+/target/
+/.project
+/.classpath
