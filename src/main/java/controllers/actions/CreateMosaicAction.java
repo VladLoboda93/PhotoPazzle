@@ -1,7 +1,9 @@
 package controllers.actions;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,8 +23,10 @@ public class CreateMosaicAction implements Action {
 		String imageToProcess;
 		List<String> tiles;
 		
-		imageToProcess = reciveImgToProcess(request);
-		tiles = reciveTiles(request);
+		String rootDirectory = createRequestUniqueDir(request);
+		
+		imageToProcess = reciveImgToProcess(request, rootDirectory);
+		tiles = reciveTiles(request, rootDirectory);
 				
 		
 		//TODO вызвать код из пакета services
@@ -31,14 +35,33 @@ public class CreateMosaicAction implements Action {
 		
 	}
 	
-	private String reciveImgToProcess(HttpServletRequest request) throws IOException, ServletException {
+	private String createRequestUniqueDir(HttpServletRequest request) {
+		
+		String rootDirectory = request.getServletContext().getRealPath("/") 
+				 			 + request.getServletContext().getInitParameter("images_directory");
+		String uniqueDirectory = Thread.currentThread().getName().toString() + " "
+				 			   + (new Date()).toString() + "\\";
+		uniqueDirectory = uniqueDirectory.replace(':', '-');
+		rootDirectory += uniqueDirectory;
+
+		File f = new File(rootDirectory);
+		f.mkdirs();
+
+		//TODO временно для тестов
+		System.out.println(rootDirectory);
+		
+		return rootDirectory;
+		
+	}
+	
+	private String reciveImgToProcess(HttpServletRequest request,  String targetDirectory) throws IOException, ServletException {
 		
 		String imageToProcess = null;
 		
 		String imgSource = request.getParameter("img_source");
 		
 		if (imgSource.equals("from_pc")) {
-			imageToProcess = uploadFile(request, "img_to_process");
+			imageToProcess = uploadFile(request, "img_to_process", targetDirectory);
 		} else if (imgSource.equals("by_url")) {
 			imageToProcess = downloadImageByUrl(request.getParameter("img_to_process"));
 		}
@@ -49,7 +72,7 @@ public class CreateMosaicAction implements Action {
 			throw new RuntimeException();
 	}
 
-	private List<String> reciveTiles(HttpServletRequest request) throws IOException, ServletException {
+	private List<String> reciveTiles(HttpServletRequest request, String targetDirectory) throws IOException, ServletException {
 		
 		List<String> tiles = null;
 		
@@ -58,7 +81,7 @@ public class CreateMosaicAction implements Action {
 		if (tilesSource.equals("template")) {
 			//TODO плитка из шаблона
 		} else if (tilesSource.equals("upload")) {
-			tiles = recieveFromZip(request);
+			tiles = recieveFromZip(request, targetDirectory);
 			
 		}
 		
@@ -69,9 +92,9 @@ public class CreateMosaicAction implements Action {
 		
 	}
 	
-	private List<String> recieveFromZip(HttpServletRequest request) throws IOException, ServletException {
+	private List<String> recieveFromZip(HttpServletRequest request,  String targetDirectory) throws IOException, ServletException {
 		
-		String tilesArchive = uploadFile(request, "tiles_zip");
+		String tilesArchive = uploadFile(request, "tiles_zip", targetDirectory);
 		
 		String tilesDir;
 		List<String> tiles = null;
@@ -104,14 +127,14 @@ public class CreateMosaicAction implements Action {
 		return null;
 	}
 	
-	private String uploadFile(HttpServletRequest request, String parameterName) throws IOException, ServletException {
+	private String uploadFile(HttpServletRequest request, String parameterName, String targetDirectory) throws IOException, ServletException {
 		
-		String rootDirectory = request.getServletContext().getRealPath("/") + request.getServletContext().getInitParameter("images_directory");
+	/*	String rootDirectory = request.getServletContext().getRealPath("/") + request.getServletContext().getInitParameter("images_directory");
 		//TODO временно для тестов
-		System.out.println(rootDirectory);
+		System.out.println(rootDirectory);*/
 		Part filePart = request.getPart(parameterName);
 		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-		String fullName = rootDirectory + fileName;
+		String fullName = targetDirectory + fileName;
 		filePart.write(fullName);
 		
 		return fullName;
