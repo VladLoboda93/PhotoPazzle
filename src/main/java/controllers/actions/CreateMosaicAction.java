@@ -18,24 +18,63 @@ public class CreateMosaicAction implements Action {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		
-		//TODO мозайка из шаблона (это относится в моему видению)
-		if (true) {
-			createFromArchive(request, response);
-		}
+		String imageToProcess;
+		List<String> tiles;
+		
+		imageToProcess = reciveImgToProcess(request);
+		tiles = reciveTiles(request);
+				
+		
+		//TODO вызвать код из пакета services
+		//TODO что возвращать?
+		return;	
 		
 	}
 	
-	private void createFromTemplate(HttpServletRequest request, HttpServletResponse response) {
-		//TODO мозайка из шаблона (это относится в моему видению)
-	};
+	private String reciveImgToProcess(HttpServletRequest request) throws IOException, ServletException {
+		
+		String imageToProcess = null;
+		
+		String imgSource = request.getParameter("img_source");
+		
+		if (imgSource.equals("from_pc")) {
+			imageToProcess = uploadFile(request, "img_to_process");
+		} else if (imgSource.equals("by_url")) {
+			imageToProcess = downloadImageByUrl(request.getParameter("img_to_process"));
+		}
+		
+		if (imageToProcess != null)
+			return imageToProcess;
+		else
+			throw new RuntimeException();
+	}
+
+	private List<String> reciveTiles(HttpServletRequest request) throws IOException, ServletException {
+		
+		List<String> tiles = null;
+		
+		String tilesSource = request.getParameter("tiles_source");
+		
+		if (tilesSource.equals("template")) {
+			//TODO плитка из шаблона
+		} else if (tilesSource.equals("upload")) {
+			tiles = recieveFromZip(request);
+			
+		}
+		
+		if (tiles != null)
+			return tiles;
+		else
+			throw new RuntimeException();
+		
+	}
 	
-	private void createFromArchive(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private List<String> recieveFromZip(HttpServletRequest request) throws IOException, ServletException {
 		
-		
-		String imageToProcess = uploadFile(request, "img_to_process");
 		String tilesArchive = uploadFile(request, "tiles_zip");
 		
 		String tilesDir;
+		List<String> tiles = null;
 		
 		try {
 			// TODO некрасиво
@@ -45,7 +84,7 @@ public class CreateMosaicAction implements Action {
 			
 			// связанный список выбран, т.к. будет много удалений из середины (в моем видении)
 			// если я правильно понял, что хочет Влад, то возможно лучше переделать в ArrayList
-			List<String> tiles = new LinkedList<>();
+			tiles = new LinkedList<>();
 			
 			tiles = DirectoryHandler.getFilesSpis(tilesDir);
 			
@@ -57,16 +96,19 @@ public class CreateMosaicAction implements Action {
 			e.printStackTrace();
 		}
 		
-		
-		//TODO вызвать код из пакета services
-		//TODO что возвращать?
-		return;	
-		
+		return tiles;
+	}
+	
+	private String downloadImageByUrl(String url){
+		//TODO фото по url
+		return null;
 	}
 	
 	private String uploadFile(HttpServletRequest request, String parameterName) throws IOException, ServletException {
 		
-		String rootDirectory = request.getServletContext().getInitParameter("images_directory");
+		String rootDirectory = request.getServletContext().getRealPath("/") + request.getServletContext().getInitParameter("images_directory");
+		//TODO временно для тестов
+		System.out.println(rootDirectory);
 		Part filePart = request.getPart(parameterName);
 		String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		String fullName = rootDirectory + fileName;
