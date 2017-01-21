@@ -8,7 +8,7 @@
   
   <context-param>
 		<param-name>images_directory</param-name>
-		<param-value>WEB-INF\uploaded_files\images\</param-value>
+		<param-value>WEB-INF/uploaded_files/images/</param-value>
 	</context-param>
   
   <servlet>
