@@ -36,11 +36,8 @@ public class MySqlPhotoDao implements PhotoDAO {
         DROP_TABLE = "DROP TABLE `temp`.`" + customTable + "`;";
         CREATE_TABLE = "CREATE TABLE `temp`.`" + customTable + "` (`path` VARCHAR(300) NOT NULL," +
                 "`R` INT NOT NULL,`G` INT NOT NULL,`B` INT NOT NULL, PRIMARY KEY (`path`));";
-        FIND_QUERY = "SELECT path FROM `temp`.`" + customTable + "` WHERE ((30*pow((R - ?),2)+59*pow((G - ?),2)+11*pow((B - ?),2)))" +
-                "= (SELECT MIN((30*pow((R - ?),2)+59*pow((G - ?),2)+11*pow((B - ?),2))) FROM `temp`.`" + customTable + "`);";
-//       " SELECT path`temp`.`" + customTable + "` WHERE (30*pow((R - ?),2)+59*pow((G - ?),2)+11*pow((B - ?),2))  " +
-//               "= (SELECT MIN((30*pow((R - ?),2)+59*pow((G - ?),2)+11*pow((B - ?),2)))FROM `temp`.`" + customTable + "`;";
-//
+        FIND_QUERY = "SELECT path FROM `temp`.`" + customTable + "` WHERE sqrt((pow((R - ?),2)+pow((G - ?),2)+pow((B - ?),2)))" +
+                "= (SELECT MIN(sqrt((pow((R - ?),2)+pow((G - ?),2)+pow((B - ?),2)))) FROM `temp`.`" + customTable + "`);";
         COUNT_QUERY = "SELECT count(path)as count FROM `temp`.`" + customTable + "`;";
     }
 
@@ -72,7 +69,7 @@ public class MySqlPhotoDao implements PhotoDAO {
         String path = null;
         try (PreparedStatement statement = connection.prepareStatement(FIND_QUERY)) {
             setStatementRGB(statement, color);
-            setStatementRGB(statement,color,3);
+            setStatementRGB(statement, color, 3);
             ResultSet set = statement.executeQuery();
             if (set.next()) {
                 path = set.getString("path");

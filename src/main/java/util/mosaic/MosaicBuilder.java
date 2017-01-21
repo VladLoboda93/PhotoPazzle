@@ -40,9 +40,10 @@ public class MosaicBuilder {
 
         BufferedImage mosaic = new BufferedImage(puzzleWidth * countWidth, puzzleHeight * countHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = mosaic.getGraphics();
-        for (int h = 0; h < colors.length; h++) {
-            for (int w = 0; w < colors[h].length; w++) {
-                puzzle = service.findPathNearestPhoto(colors[h][w]);
+
+        for (int w = 0; w < colors.length; w++) {
+            for (int h = 0; h < colors[w].length; h++) {
+                puzzle = service.findPathNearestPhoto(colors[w][h]);
                 if (puzzle != null)
                     graphics.drawImage(puzzle, w * puzzleWidth, h * puzzleHeight, puzzleWidth, puzzleHeight, null);
             }
@@ -56,9 +57,9 @@ public class MosaicBuilder {
 
         int height = masterPhoto.getHeight();
         int width = masterPhoto.getWidth();
-        //int count = service.count();
-
-        int count = 2000;
+        int count = service.count();
+//
+//        int count = 100;
         if (count > MIN_VALUE) {
             count = (int) (count * RESERVE_KOEFF);
         }
@@ -81,14 +82,14 @@ public class MosaicBuilder {
         System.out.println(puzzleWidth + "ширина картинки");
         System.out.println(puzzleHeight + " высота картинки");
 
-        Color colors[][] = new Color[countHeight][countWidth];
+        Color colors[][] = new Color[countWidth][countHeight];
         for (int h = 0; h < countHeight; h++) {
             for (int w = 0; w < countWidth; w++) {
                 try {
-                    colors[h][w] = ColorCalculator.averageColor(masterPhoto.getSubimage(h * puzzleWidth, w * puzzleHeight, puzzleWidth, puzzleHeight));
+                    colors[w][h] = ColorCalculator.averageColor(masterPhoto.getSubimage(w * puzzleWidth, h * puzzleHeight, puzzleWidth, puzzleHeight));
                 } catch (Exception e) {
 //TODO придумать решение
-                    colors[h][w] = new Color(0, 0, 0);
+                    colors[w][h] = new Color(0, 0, 0);
                 }
             }
         }
