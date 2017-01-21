@@ -40,7 +40,7 @@ public class CreateMosaicAction implements Action {
 		String rootDirectory = request.getServletContext().getRealPath("/") 
 				 			 + request.getServletContext().getInitParameter("images_directory");
 		String uniqueDirectory = Thread.currentThread().getName().toString() + " "
-				 			   + (new Date()).toString() + "\\";
+				 			   + (new Date()).toString() + "/";
 		uniqueDirectory = uniqueDirectory.replace(':', '-');
 		rootDirectory += uniqueDirectory;
 
