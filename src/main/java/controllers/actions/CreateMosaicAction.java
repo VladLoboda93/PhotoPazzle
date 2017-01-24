@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import controllers.Executor;
 import net.lingala.zip4j.exception.ZipException;
 import util.DirectoryHandler;
 
@@ -27,6 +28,8 @@ public class CreateMosaicAction implements Action {
 		
 		imageToProcess = reciveImgToProcess(request, rootDirectory);
 		tiles = reciveTiles(request, rootDirectory);
+
+        Executor executor = new Executor(imageToProcess,tiles,rootDirectory);
 				
 		
 		//TODO вызвать код из пакета services
@@ -40,7 +43,7 @@ public class CreateMosaicAction implements Action {
 		String rootDirectory = request.getServletContext().getRealPath("/") 
 				 			 + request.getServletContext().getInitParameter("images_directory");
 		String uniqueDirectory = Thread.currentThread().getName().toString() + " "
-				 			   + (new Date()).toString() + "/";
+				 			   + (new Date()).toString() + "\\";
 		uniqueDirectory = uniqueDirectory.replace(':', '-');
 		rootDirectory += uniqueDirectory;
 

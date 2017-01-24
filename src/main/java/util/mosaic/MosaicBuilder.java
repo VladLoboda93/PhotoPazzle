@@ -6,6 +6,7 @@ import util.ColorCalculator;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +14,11 @@ import java.io.InputStream;
 public class MosaicBuilder {
     private final double RESERVE_KOEFF = 0.7;
     private PhotoService service;
+    private String photoPath;
     private int MIN_VALUE = 4000;
 
-    public MosaicBuilder(PhotoService service) {
+    public MosaicBuilder(PhotoService service, String photoPath) {
+        this.photoPath = photoPath;
         this.service = service;
     }
 
@@ -35,7 +38,7 @@ public class MosaicBuilder {
         return image;
     }
 
-    public BufferedImage createMosaic(Color[][] colors) {
+    public String createMosaic(Color[][] colors) {
         BufferedImage puzzle = null;
 
         BufferedImage mosaic = new BufferedImage(puzzleWidth * countWidth, puzzleHeight * countHeight, BufferedImage.TYPE_INT_ARGB);
@@ -50,16 +53,24 @@ public class MosaicBuilder {
         }
         graphics.dispose();
 
-        return mosaic;
+        File file = new File(photoPath + "\\done1.png");
+
+        try {
+            ImageIO.write(mosaic, "PNG", file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file.getAbsolutePath();
     }
 
-    public BufferedImage createMosaic(BufferedImage masterPhoto) {
+    public String createMosaic() {
 
+        BufferedImage masterPhoto = getImageByPath(photoPath);
         int height = masterPhoto.getHeight();
         int width = masterPhoto.getWidth();
         int count = service.count();
-//
-//        int count = 100;
+
         if (count > MIN_VALUE) {
             count = (int) (count * RESERVE_KOEFF);
         }
@@ -93,7 +104,7 @@ public class MosaicBuilder {
                 }
             }
         }
-        BufferedImage mosaic = createMosaic(colors);
-        return mosaic;
+        String mosaicPath = createMosaic(colors);
+        return mosaicPath;
     }
 }
