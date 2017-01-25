@@ -126,8 +126,26 @@ public class CreateMosaicAction implements Action {
 	}
 	
 	private String downloadImageByUrl(String url){
-		//TODO фото по url
-		return null;
+		BufferedImage img;
+        	String fileName = "fromlink.png";
+        	try {
+          		try {
+           	     		img = ImageIO.read(new URL(url));
+          		}
+			catch (MalformedURLException m) {
+                		return null;
+          		}
+          		File file = new File( targetDirectory + fileName);
+            		if (!file.exists()) {
+                		file.createNewFile();
+            		}
+            		ImageIO.write(img, "png", file);
+        	}
+        	catch(IOException e){
+            		//TODO ситуация с одинаковыми именами файлов
+            		return null;
+        	}
+       		return targetDirectory + fileName;
 	}
 	
 	private String uploadFile(HttpServletRequest request, String parameterName, String targetDirectory) throws IOException, ServletException {
