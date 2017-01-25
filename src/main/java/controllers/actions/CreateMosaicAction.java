@@ -66,7 +66,7 @@ public class CreateMosaicAction implements Action {
 		if (imgSource.equals("from_pc")) {
 			imageToProcess = uploadFile(request, "img_to_process", targetDirectory);
 		} else if (imgSource.equals("by_url")) {
-			imageToProcess = downloadImageByUrl(request.getParameter("img_to_process"));
+			imageToProcess = downloadImageByUrl(request.getParameter("img_to_process"),targetDirectory);
 		}
 		
 		if (imageToProcess != null)
@@ -125,7 +125,7 @@ public class CreateMosaicAction implements Action {
 		return tiles;
 	}
 	
-	private String downloadImageByUrl(String url){
+	private String downloadImageByUrl(String url,String targetDirectory){
 		BufferedImage img;
         	String fileName = "fromlink.png";
         	try {
