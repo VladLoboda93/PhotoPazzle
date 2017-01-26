@@ -65,6 +65,7 @@ public class DirectoryHandler {
 		ArrayList<String> correctExtentions = new ArrayList<>();
 		correctExtentions.add("png");
 		correctExtentions.add("jpg");
+		correctExtentions.add("jpeg");
 		
 		if (correctExtentions.contains(extension))
 			return true;
