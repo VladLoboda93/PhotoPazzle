@@ -29,13 +29,14 @@ public class MySQLPhotoService implements PhotoService {
         try {
             image = castToImage(file);
             color = ColorCalculator.averageColor(image);
+            dao.addPhoto(file.getAbsolutePath(), color);
         } catch (Exception e) {
             //TODO прикрутить логер
             System.out.println(file.getName() + " not exist or not to be a image " + e);
-            return;
+            //return;
         }
 
-        dao.addPhoto(file.getAbsolutePath(), color);
+        //dao.addPhoto(file.getAbsolutePath(), color);
     }
 
     private BufferedImage castToImage(File file) throws IOException {
