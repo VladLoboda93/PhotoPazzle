@@ -46,7 +46,9 @@ public class CreateMosaicAction implements Action {
 			response.sendRedirect("mistake.do");
 		
 		//TODO этот класс должен быть в другом пакете
-        Executor executor = new Executor(imageToProcess,tiles,rootDirectory);
+        //Executor executor = new Executor(imageToProcess,tiles,rootDirectory);
+		MainClass main = new MainClass(imageToProcess,tiles,rootDirectory);
+		main.getPathToReadyPuzzle();
 				
 		
 		//TODO вызвать код из пакета services
