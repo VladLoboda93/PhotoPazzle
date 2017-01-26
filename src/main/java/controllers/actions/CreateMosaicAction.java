@@ -1,20 +1,27 @@
 package controllers.actions;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import com.google.gson.Gson;
 
 import model.logic.service.MainClass;
 import net.lingala.zip4j.exception.ZipException;
@@ -48,11 +55,23 @@ public class CreateMosaicAction implements Action {
 		//TODO этот класс должен быть в другом пакете
         //Executor executor = new Executor(imageToProcess,tiles,rootDirectory);
 		MainClass main = new MainClass(imageToProcess,tiles,rootDirectory);
-		main.getPathToReadyPuzzle();
+		String pathToReadyPuzzle = main.getPathToReadyPuzzle();
 				
+		//TODO это слишком уродливо даже для меня
+		BufferedImage sourceImage = ImageIO.read(new File(imageToProcess)) ,changedImage = ImageIO.read(new File(pathToReadyPuzzle));
+		String source,changed;
+		source = convert(sourceImage,"jpg");
+		changed = convert(changedImage,"jpg");
 		
-		//TODO вызвать код из пакета services
-		//TODO что возвращать?
+		Map<String, String> map = new LinkedHashMap<String, String>();
+	    	map.put("source",source);
+	    	map.put("changed",changed);
+    	
+    		String json = new Gson().toJson(map);
+    		response.setContentType("application/json");
+    		response.setCharacterEncoding("UTF-8");
+    		response.getWriter().write(json);
+		
 		return;	
 		
 	}
@@ -179,6 +198,20 @@ public class CreateMosaicAction implements Action {
 		filePart.write(fullName);
 		
 		return fullName;
+	}
+	
+	//TODO Временно (для демо). Послу перенести в utils
+	public String convert(BufferedImage image , String type){
+		String out = null;
+		//type = "jpg","png" и т.д.
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+	    try {
+	        ImageIO.write(image, type, Base64.getEncoder().wrap(os));
+	        out = os.toString(StandardCharsets.ISO_8859_1.name());
+	    } 
+	    catch (final IOException ioe) {
+	    }
+	    return out;
 	}
 
 }
