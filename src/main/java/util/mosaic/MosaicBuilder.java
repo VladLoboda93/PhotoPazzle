@@ -52,14 +52,14 @@ public class MosaicBuilder {
             }
         }
         graphics.dispose();
-
-        File file = new File(photoPath + "\\done1.png");
-
+//TODO доделать
+        File file = new File( "\\res\\done1.png");
         try {
             ImageIO.write(mosaic, "PNG", file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         return file.getAbsolutePath();
     }

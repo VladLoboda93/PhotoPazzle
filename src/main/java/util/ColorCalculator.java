@@ -13,8 +13,8 @@ public class ColorCalculator {
         double g = 0;
         double b = 0;
 
-        for (int x = 0; x < raster.getWidth(); x+=1000) {
-            for (int y = 0; y < raster.getHeight(); y+=1000) {
+        for (int x = 0; x < raster.getWidth(); x++) {
+            for (int y = 0; y < raster.getHeight(); y++) {
                 raster.getPixel(x, y, array);
                 r += array[0];
                 g += array[1];

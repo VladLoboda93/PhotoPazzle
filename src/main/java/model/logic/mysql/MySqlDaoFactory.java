@@ -43,10 +43,12 @@ public class MySqlDaoFactory implements DaoFactory {
     @Override
     public PhotoDAO getDao(String customTable) {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             return new MySqlPhotoDao(customTable,  DriverManager.getConnection(url, login, password));
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            new RuntimeException("Can't connect to database " + e);
         }
         return null;
     }
+
 }
