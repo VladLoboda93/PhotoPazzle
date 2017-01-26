@@ -32,7 +32,20 @@ public class CreateMosaicAction implements Action {
 		
 		imageToProcess = reciveImgToProcess(request, rootDirectory);
 		tiles = reciveTiles(request, rootDirectory);
-
+		System.out.println(tiles.size());
+		tiles = DirectoryHandler.selectOnlyImageFiles(tiles);
+		System.out.println(tiles.size());
+		System.out.println(tiles);
+		
+		//TODO validation block
+		//TODO человечные сообщения об ошибке
+		if (!DirectoryHandler.isImageFile(imageToProcess))
+			response.sendRedirect("mistake.do");
+		
+		if (tiles.size() == 0)
+			response.sendRedirect("mistake.do");
+		
+		//TODO этот класс должен быть в другом пакете
         Executor executor = new Executor(imageToProcess,tiles,rootDirectory);
 				
 		
